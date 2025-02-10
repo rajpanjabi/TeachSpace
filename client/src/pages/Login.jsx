@@ -22,11 +22,17 @@ const Login = () => {
     const name = e.target.name.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
+    const confirmPassword = e.target["confirm-password"].value;
+    const subjects=[]
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
     try {
       const response = await axios.post(
         "http://localhost:4000/api/teachers/register",
-        { name, email, password },
+        { name, email, password, subjects },
         {
           headers: {
             "Content-Type": "application/json",
@@ -35,7 +41,13 @@ const Login = () => {
       );
 
       if (response.status === 200) {
-        navigate("/dashboard");
+        const teacherName = response.data.teacher.name; // Assuming the backend returns the teacher's name
+        console.log(response.data)
+        console.log(teacherName)
+        // Store teacherName in localStorage
+        localStorage.setItem("teacherName", teacherName);
+
+        navigate(`/dashboard/${name}`);
       } else {
         console.error("Sign-up failed");
       }
@@ -62,11 +74,20 @@ const Login = () => {
       );
 
       if (response.status === 200) {
-        navigate("/dashboard");
+        const teacherName = response.data.teacher.name; // Assuming the backend returns the teacher's name
+        console.log(response.data)
+        console.log(teacherName)
+        localStorage.setItem("teacherName", teacherName);
+        // const teacherName = response.data.teacher.name; // Assuming the backend returns the teacher's name
+        // Navigate to the dashboard with teacherName in the URL
+        
+        navigate(`/dashboard/${teacherName}`);
+       
       } else {
         console.error("Sign-in failed");
       }
     } catch (error) {
+      alert("Invalid email or password");
       console.error("Error during sign-in:", error);
     }
   };

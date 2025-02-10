@@ -5,7 +5,9 @@ const teacherSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true }, // Email should always be unique
   password: { type: String, required: function () { return !this.googleId; } }, // Required if googleId is not present
-  subjects: [{ type: String }], // Array of subjects the teacher teaches
+  subjects: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Subject" } // Connects teachers to subjects Array of subjects the teacher teaches
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 
