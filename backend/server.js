@@ -6,6 +6,7 @@ import teacherRoutes from "./routes/teacherRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import observationRoutes from "./routes/observationRoutes.js";
 import curriculumRoutes from "./routes/curriculumRoutes.js";
+import subjectRoutes from "./routes/subjectRoutes.js";
 import session from 'express-session';
 import passport from 'passport';
 import './config/passportSetup.js'; 
@@ -44,6 +45,7 @@ app.use("/api/teachers", teacherRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/observations", observationRoutes);
 app.use("/api/curriculum", curriculumRoutes);
+app.use("/api/subjects", subjectRoutes);
 
 const PORT = process.env.PORT || 6000;
 app.listen(PORT, () => {    

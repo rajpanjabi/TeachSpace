@@ -10,7 +10,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:4000/dashboard', // Change this to your production callback URL
+      callbackURL: 'http://localhost:5173/dashboard', // Change this to your production callback URL
     },
     async (accessToken, refreshToken, profile, done) => {
         try {

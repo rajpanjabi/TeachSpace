@@ -3,7 +3,7 @@ import { addObservation, getObservationsByStudent } from "../controllers/observa
 
 const router = express.Router();
 
-router.post("/", addObservation);
+router.post("/addObservation", addObservation);
 router.get("/:studentId", getObservationsByStudent);
 
 export default router;
