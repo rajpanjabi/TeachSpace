@@ -1,3 +1,4 @@
+import Observation from "../models/observation.js";
 import Student from "../models/student.js";
 import Subject from "../models/subject.js";
 import Teacher from "../models/teacher.js"
@@ -58,61 +59,7 @@ export const addStudent = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
-// /// Add a new student
-// export const addStudent = async (req, res) => {
-//   const { name, grade, picture, teacherName, subjects } = req.body;
 
-//   try {
-//     // Find the teacher by name
-//     const teacher = await Teacher.findOne({ name: teacherName });
-//     if (!teacher) {
-//       return res.status(404).json({ message: "Teacher not found" });
-//     }
-
-//     // Check if the subjects exist and are associated with the teacher
-//     const subjectIds = [];
-//     for (const subjectName of subjects) {
-//       const subject = await Subject.findOne({ name: subjectName, teacher: teacher._id });
-//       if (!subject) {
-//         return res.status(400).json({ message: `Subject '${subjectName}' not found or not associated with this teacher` });
-//       }
-//       subjectIds.push(subject._id);
-//     }
-
-//     // Create a new student associated with the teacher and subjects
-//     const student = new Student({
-//       name,
-//       grade,
-//       picture,
-//       teacher: teacher._id, // Link the student to the found teacher
-//       subjects: subjectIds,  // Link the student to the found subjects (by ObjectId)
-//     });
-
-//     // Add the student's ObjectId to the subject's students list
-//     Subject.students.push(student._id);
-//     await subject.save();
-
-//     // Save the student
-//     await student.save();
-
-//     // Return success message
-//     res.status(200).json({ message: "Student added successfully" });
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error", error });
-//   }
-// };
-// // Add a new student
-// export const addStudent = async (req, res) => {
-//   const { name, grade, picture, teacherId, subjects } = req.body;
-
-//   try {
-//     const student = new Student({ name, grade, picture });
-//     await student.save();
-//     res.status(200).json({ message: "Student added successfully" });
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error", error });
-//   }
-// };
 
 // Get all students
 export const getAllStudents = async (req, res) => {
@@ -142,3 +89,35 @@ export const getStudentsByTeacher = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+//Get all observations by student
+
+export const getObservationsByStudent = async (req, res) => {
+  const { studentName } = req.params; //  retrieve the teacher’s name passed in the URL.
+
+  try {
+    // Find the teacher by name
+    const student = await Student.findOne({ name: studentName });
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    // Find observations associated with the student's ID
+    const observations = await Observation.find({ student: student._id });
+
+    res.status(200).json({ student, observations }
+
+    );
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+// lets create a student profile page which will show image of student profile in circle in centre top.
+// below student name
+// below this there should be a div containing observation made on students and soem grpahiscs
+// below this there should be some plotes/visual graph with some metrics
+// option to generate report on student performance and option to send email to parent
+
+

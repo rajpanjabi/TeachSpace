@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import StudentProfile from './pages/StudentProfile';
 import Landing from './pages/LandingPage';
+import AboutUs from './pages/About';
 
 const App = () => {
   return (
@@ -16,10 +17,11 @@ const App = () => {
     <main className="flex-grow">
     
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<AboutUs/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard/:teacherName" element={<Dashboard />} />
-        <Route path="/student/:id" element={<StudentProfile />} />
+        <Route path="/studentprofile/:studentName" element={<StudentProfile />} />
+        {/* <Route path="/about" element={<AboutUs/>} />  */}
       </Routes>
       </main>
       <Footer />

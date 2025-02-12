@@ -43,7 +43,16 @@ export const registerTeacher = async (req, res) => {
     teacher.subjects = subjectIds;
     await teacher.save();
   }
-    res.status(200).json({ message: "Teacher registered successfully" });
+    // res.status(200).json({ message: "Teacher registered successfully" });
+    res.status(200).json({ 
+      message: "Teacher registered successfully", 
+      teacher: {
+        _id: teacher._id,
+        name: teacher.name,
+        email: teacher.email,
+        subjects: teacher.subjects
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

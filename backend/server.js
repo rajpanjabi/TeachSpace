@@ -20,7 +20,11 @@ dotenvConfig();
 const app= express();
 
 app.use(express.json());        // to parse incoming request with JSON payloads
-app.use(cors());   // to enable CORS
+// app.use(cors());   // to enable CORS
+app.use(cors({
+  origin: 'http://localhost:5173',  // Specify the origin of your frontend
+  credentials: true                 // Allow credentials (cookies, authorization headers, etc.)
+}));
 import connectDB from "./config/db.js";
 connectDB();
 
