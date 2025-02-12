@@ -4,17 +4,17 @@ import { BookOpen, BarChart2, Users } from 'lucide-react';
 const AboutUs = () => {
   const features = [
     {
-      icon: <BookOpen className="w-12 h-12 text-blue-600" />,
+      icon: <BookOpen className="w-12 h-12 text-green-500" />,
       title: "Smart Observations",
       description: "Easily capture and organize student observations with AI-powered suggestions"
     },
     {
-      icon: <BarChart2 className="w-12 h-12 text-blue-600" />,
+      icon: <BarChart2 className="w-12 h-12 text-green-500" />,
       title: "Insightful Reports",
       description: "Generate real-time progress reports and identify learning trends effortlessly"
     },
     {
-      icon: <Users className="w-12 h-12 text-blue-600" />,
+      icon: <Users className="w-12 h-12 text-green-500" />,
       title: "Keep Parents Informed",
       description: "Seamless communication with automated updates and personalized feedback for parents"
     }
@@ -49,15 +49,15 @@ const AboutUs = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-secondary">
       {/* Hero Section */}
-      <section className="relative bg-blue-600 text-white py-20">
+      <section className="relative text-green-500 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-4">
+            <h1 className="text-4xl text-gray-900 font-bold mb-4">
               Simplifying Observations, Enhancing Learning
             </h1>
-            <p className="text-xl max-w-3xl mx-auto">
+            <p className="text-xl text-gray-900 max-w-3xl mx-auto">
               Our platform helps teachers save time, track student progress efficiently, and communicate insights seamlessly.
             </p>
           </div>
