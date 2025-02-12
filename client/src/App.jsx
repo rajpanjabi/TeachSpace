@@ -52,7 +52,6 @@
 
 // export default App;
 
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
@@ -78,7 +77,11 @@ const App = () => {
         {/* Routes for authenticated users (With Navbar & Footer) */}
         <Route element={<Layout />}>
           <Route path="/dashboard/:teacherName" element={<Dashboard />} />
-          <Route path="/studentprofile/:studentName" element={<StudentProfile />} /> {/* Used /student/:id */}
+          <Route
+            path="/studentprofile/:studentName"
+            element={<StudentProfile />}
+          />{" "}
+          {/* Used /student/:id */}
           <Route path="/getstarted" element={<TeachingSetup />} />
         </Route>
       </Routes>
