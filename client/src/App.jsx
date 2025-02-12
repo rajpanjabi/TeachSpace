@@ -1,34 +1,32 @@
-import React from 'react'
-import './index.css'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from "./components/navbar";
-import Footer from "./components/footer";
-import Dashboard from './pages/Dashboard';
-import Login from './pages/Login';
-import StudentProfile from './pages/StudentProfile';
-import Landing from './pages/LandingPage';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "./Layout";
+import VisitorLayout from "./VisitorLayout";
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import StudentProfile from "./pages/StudentProfile";
+import Landing from "./pages/LandingPage/LandingPage";
+import TeachingSetup from "./pages/TeachingSetup";
 
 const App = () => {
   return (
     <Router>
-    <div className="flex flex-col min-h-screen">
-    <Navbar />
-    <main className="flex-grow">
-    
       <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard/:teacherName" element={<Dashboard />} />
-        <Route path="/student/:id" element={<StudentProfile />} />
+        {/* Routes for visitors (No Navbar, No Footer) */}
+        <Route element={<VisitorLayout />}>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
+
+        {/* Routes for authenticated users (With Navbar & Footer) */}
+        <Route element={<Layout />}>
+          <Route path="/dashboard/:teacherName" element={<Dashboard />} />
+          <Route path="/student/:id" element={<StudentProfile />} />
+          <Route path="/getstarted" element={<TeachingSetup />} />
+        </Route>
       </Routes>
-      </main>
-      <Footer />
-    </div>
     </Router>
-    
-  )
-}
+  );
+};
 
-export default App
-
-
+export default App;
