@@ -149,6 +149,7 @@ import React, { useState, useEffect } from "react";
 import logo from "../../assets/logo.svg";
 import "./navbar.css";
 import { UserCircle } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 const Navbar = ({ user }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -186,35 +187,35 @@ const Navbar = ({ user }) => {
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="text-primary text-xl font-bold">
-          <Link to="/">
+          <Link to={`${isAuthenticated ? `/dashboard/${teacherName}` : "/"}`}>
             <img src={logo} alt="Logo" />
           </Link>
         </div>
 
         {/* Navigation Links */}
         <div className="hidden md:flex space-x-10">
-          <Link to="/" className="custom-link active-link font-semibold">
-            Home
-          </Link>
-          <Link to="/services" className="custom-link">
-            Services
-          </Link>
-          <Link to="/features" className="custom-link">
-            Features
-          </Link>
-          <Link to="/testimonials" className="custom-link">
-            Testimonials
-          </Link>
-          <Link to="/faq" className="custom-link">
-            FAQ
-          </Link>
-          <Link
-              to={`/dashboard/${teacherName}`}
-              className="custom-link"
-            >
+          {!isAuthenticated && (
+            <>
+              <Link to="/" className="custom-link active-link font-semibold">
+                Home
+              </Link>
+
+              <Link href="/#features" className="custom-link">
+                Features
+              </Link>
+              <Link to="#" className="custom-link">
+                Testimonials
+              </Link>
+              <Link to="#" className="custom-link">
+                FAQ
+              </Link>
+            </>
+          )}
+          {isAuthenticated && (
+            <Link to={`/dashboard/${teacherName}`} className="custom-link">
               Dashboard
             </Link>
-          
+          )}
         </div>
 
         {/* Authentication Section */}
@@ -247,11 +248,18 @@ const Navbar = ({ user }) => {
               <span className="text-primary">{teacherName}</span>
 
               {/* Logout Button */}
-              <button
+              {/* <button
                 onClick={handleLogout}
                 className="py-[0.2rem] px-3 rounded-md bg-red-500 text-white md:text-sm"
               >
                 Logout
+              </button> */}
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1 px-2 py-1 text-white bg-red-600 rounded-lg shadow-md text-sm hover:bg-red-700 transition-all  "
+              >
+                <LogOut size={15} />
+                <span>Logout</span>
               </button>
             </div>
           )}
@@ -293,9 +301,14 @@ const Navbar = ({ user }) => {
           <Link to="/contact" className="block hover:text-gray-400">
             Contact
           </Link>
-          <Link to="/dashboard" className="block hover:text-gray-400">
-            Dashboard
-          </Link>
+          {isAuthenticated && (
+            <Link
+              to={`${isAuthenticated ? `/dashboard/${teacherName}` : "/login"}`}
+              className="block hover:text-gray-400"
+            >
+              Dashboard
+            </Link>
+          )}
         </div>
       )}
     </nav>

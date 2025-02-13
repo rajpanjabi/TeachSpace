@@ -48,8 +48,7 @@ import { Link } from "react-router-dom";
 // import SchoolLogosMarquee from "../../components/schoolLogoMarquee/schoolLogoMarquee";
 
 const LandingPage = () => {
-
-  const teacherName=localStorage.getItem("teacherName");
+  const teacherName = localStorage.getItem("teacherName");
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -118,7 +117,9 @@ const LandingPage = () => {
             </button> */}
 
             <button className="mt-8 px-4 py-2 bg-green-500 text-white text-lg font-semibold rounded-lg hover:bg-green-600 transition-all duration-300 flex items-center gap-2 group">
-              <Link to={teacherName ? `/dashboard/${teacherName}` : "/login"}>Get Started</Link>
+              <Link to={teacherName ? `/dashboard/${teacherName}` : "/login"}>
+                Get Started
+              </Link>
               <ArrowRight className="group-hover:translate-x-1 transition-transform" />
             </button>
           </section>
@@ -202,7 +203,10 @@ const LandingPage = () => {
               </div>
             </div>
 
-            <div className="p-8 border rounded-xl shadow-sm hover:shadow-md transition-all duration-300 bg-white">
+            <div
+              className="p-8 border rounded-xl shadow-sm hover:shadow-md transition-all duration-300 bg-white"
+              
+            >
               <div className="flex flex-col items-center">
                 <div className="p-3 bg-green-50 rounded-full mb-6">
                   <ClipboardCheck className="w-8 h-8 text-green-500" />
@@ -233,7 +237,7 @@ const LandingPage = () => {
             </div>
           </div>
         </section>
-        <section className="bg-secondary py-20 flex justify-center text-center">
+        <section className="bg-secondary py-20 flex justify-center text-center" id="features">
           <div className="container mx-auto text-center ">
             {/* Left side - Content */}
             <div className="md:w-full mb-10 md:mb-0 ">

@@ -82,7 +82,7 @@ const App = () => {
             element={<StudentProfile />}
           />{" "}
           {/* Used /student/:id */}
-          <Route path="/getstarted" element={<TeachingSetup />} />
+          <Route path="/getstarted/:name" element={<TeachingSetup />} />
         </Route>
       </Routes>
     </Router>
