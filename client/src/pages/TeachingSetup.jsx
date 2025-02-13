@@ -1,20 +1,64 @@
+
 "use client";
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import teachingSetup from "../assets/teachingSetup.svg";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function TeachingSetupForm() {
-  const [selectedGrade, setSelectedGrade] = useState("Grade 9");
-  const [selectedSubject, setSelectedSubject] = useState("core");
+  const [formData, setFormData] = useState({
+    grade: "Grade 9",
+    subjectType: "core",
+    selectedSubject: "",
+    customSubject: "",
+    curriculum: "Toronto District School Board"
+  });
   const [isGradeOpen, setIsGradeOpen] = useState(false);
   const [isCoreOpen, setIsCoreOpen] = useState(false);
   const [isAdditionalOpen, setIsAdditionalOpen] = useState(false);
-  const [isCustomOpen, setIsCustomOpen] = useState(false);
   const [isCurriculumOpen, setIsCurriculumOpen] = useState(false);
+  //need teacherName from url
+  const teacherName= window.location.pathname.split("/")[2];
+  console.log(teacherName);
+  const navigate = useNavigate();
+
+  const handleSave = async () => {
+    if (!formData.selectedSubject && formData.subjectType !== "custom") {
+      console.log("Please select a subject.");
+      return;
+    }
+  
+    if (formData.subjectType === "custom" && !formData.customSubject.trim()) {
+      console.log("Please enter a custom subject.");
+      return;
+    }
+  
+    const finalData = {
+      teacherName: teacherName, // Replace with actual teacher's name
+      name: formData.subjectType === "custom" ? formData.customSubject : formData.selectedSubject,
+    };
+  
+    console.log("Saving data:", finalData);
+  
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/subjects/createSubject",
+        finalData
+      );
+      console.log("Response:", response.data);
+    } catch (e) {
+      console.error("Error saving subject:", e);
+    }
+
+    // Redirect to the next page if response is successful and pass the teacherName and subjectName
+  //  navigate()
+   
+    };
 
   return (
-    <div className="min-h-full bg-gray-50 flex    ">
+    <div className="min-h-full bg-gray-50 flex">
       <div className="flex flex-col md:flex-row bg-white shadow-lg overflow-hidden w-full h-full justify-center items-center py-20">
         <div className="w-full md:max-w-md xl:max-w-lg p-4 sm:p-6">
           <div className="space-y-4">
@@ -32,15 +76,13 @@ export default function TeachingSetupForm() {
             <div className="space-y-3">
               {/* Grade Selection */}
               <div className="space-y-1">
-                <label className="block text-sm text-gray-500">
-                  Select Grade
-                </label>
+                <label className="block text-sm text-gray-500">Select Grade</label>
                 <div className="relative">
                   <button
                     onClick={() => setIsGradeOpen(!isGradeOpen)}
                     className="w-full px-3 py-1.5 text-sm text-left border border-green-500 rounded-md flex items-center justify-between"
                   >
-                    <span>{selectedGrade}</span>
+                    <span>{formData.grade}</span>
                     <ChevronDown className="h-4 w-4" />
                   </button>
                   {isGradeOpen && (
@@ -51,7 +93,7 @@ export default function TeachingSetupForm() {
                             key={grade}
                             className="w-full px-3 py-1.5 text-sm text-left hover:bg-gray-50"
                             onClick={() => {
-                              setSelectedGrade(grade);
+                              setFormData(prev => ({ ...prev, grade }));
                               setIsGradeOpen(false);
                             }}
                           >
@@ -74,13 +116,13 @@ export default function TeachingSetupForm() {
                   <div className="flex items-start space-x-2">
                     <div
                       className="relative flex items-center"
-                      onClick={() => setSelectedSubject("core")}
+                      onClick={() => setFormData(prev => ({ ...prev, subjectType: "core", selectedSubject: "" }))}
                     >
                       <input
                         type="radio"
                         name="subject"
-                        checked={selectedSubject === "core"}
-                        onChange={() => setSelectedSubject("core")}
+                        checked={formData.subjectType === "core"}
+                        onChange={() => setFormData(prev => ({ ...prev, subjectType: "core", selectedSubject: "" }))}
                         className="w-3 h-3 text-green-500 border-gray-300 focus:ring-green-500"
                       />
                     </div>
@@ -91,24 +133,25 @@ export default function TeachingSetupForm() {
                       <div className="relative">
                         <button
                           onClick={() => setIsCoreOpen(!isCoreOpen)}
-                          disabled={selectedSubject !== "core"}
+                          disabled={formData.subjectType !== "core"}
                           className={`w-full px-3 py-1.5 text-sm text-left border rounded-md flex items-center justify-between ${
-                            selectedSubject === "core"
-                              ? "bg-white"
-                              : "bg-gray-50"
+                            formData.subjectType === "core" ? "bg-white" : "bg-gray-50"
                           }`}
                         >
-                          <span>All Core Subjects</span>
+                          <span>{formData.subjectType === "core" && formData.selectedSubject ? formData.selectedSubject : "All Core Subjects"}</span>
                           <ChevronDown className="h-4 w-4" />
                         </button>
-                        {isCoreOpen && selectedSubject === "core" && (
+                        {isCoreOpen && formData.subjectType === "core" && (
                           <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg">
                             {["Mathematics", "Science", "English"].map(
                               (subject) => (
                                 <button
                                   key={subject}
                                   className="w-full px-3 py-1.5 text-sm text-left hover:bg-gray-50"
-                                  onClick={() => setIsCoreOpen(false)}
+                                  onClick={() => {
+                                    setFormData(prev => ({ ...prev, selectedSubject: subject }));
+                                    setIsCoreOpen(false);
+                                  }}
                                 >
                                   {subject}
                                 </button>
@@ -124,13 +167,13 @@ export default function TeachingSetupForm() {
                   <div className="flex items-start space-x-2">
                     <div
                       className="relative flex items-center"
-                      onClick={() => setSelectedSubject("additional")}
+                      onClick={() => setFormData(prev => ({ ...prev, subjectType: "additional", selectedSubject: "" }))}
                     >
                       <input
                         type="radio"
                         name="subject"
-                        checked={selectedSubject === "additional"}
-                        onChange={() => setSelectedSubject("additional")}
+                        checked={formData.subjectType === "additional"}
+                        onChange={() => setFormData(prev => ({ ...prev, subjectType: "additional", selectedSubject: "" }))}
                         className="w-3 h-3 text-green-500 border-gray-300 focus:ring-green-500"
                       />
                     </div>
@@ -141,75 +184,25 @@ export default function TeachingSetupForm() {
                       <div className="relative">
                         <button
                           onClick={() => setIsAdditionalOpen(!isAdditionalOpen)}
-                          disabled={selectedSubject !== "additional"}
+                          disabled={formData.subjectType !== "additional"}
                           className={`w-full px-3 py-1.5 text-sm text-left border rounded-md flex items-center justify-between ${
-                            selectedSubject === "additional"
-                              ? "bg-white"
-                              : "bg-gray-50"
+                            formData.subjectType === "additional" ? "bg-white" : "bg-gray-50"
                           }`}
                         >
-                          <span>All Additional Subjects</span>
+                          <span>{formData.subjectType === "additional" && formData.selectedSubject ? formData.selectedSubject : "All Additional Subjects"}</span>
                           <ChevronDown className="h-4 w-4" />
                         </button>
-                        {isAdditionalOpen &&
-                          selectedSubject === "additional" && (
-                            <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg">
-                              {["Art", "Music", "Physical Education"].map(
-                                (subject) => (
-                                  <button
-                                    key={subject}
-                                    className="w-full px-3 py-1.5 text-sm text-left hover:bg-gray-50"
-                                    onClick={() => setIsAdditionalOpen(false)}
-                                  >
-                                    {subject}
-                                  </button>
-                                )
-                              )}
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Custom Subject */}
-                  <div className="flex items-start space-x-2">
-                    <div
-                      className="relative flex items-center"
-                      onClick={() => setSelectedSubject("custom")}
-                    >
-                      <input
-                        type="radio"
-                        name="subject"
-                        checked={selectedSubject === "custom"}
-                        onChange={() => setSelectedSubject("custom")}
-                        className="w-3 h-3 text-green-500 border-gray-300 focus:ring-green-500"
-                      />
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      <label className="block text-sm text-gray-500">
-                        Custom Subject
-                      </label>
-                      <div className="relative">
-                        <button
-                          onClick={() => setIsCustomOpen(!isCustomOpen)}
-                          disabled={selectedSubject !== "custom"}
-                          className={`w-full px-3 py-1.5 text-sm text-left border rounded-md flex items-center justify-between ${
-                            selectedSubject === "custom"
-                              ? "bg-white"
-                              : "bg-gray-50"
-                          }`}
-                        >
-                          <span>Enter the Subject</span>
-                          <ChevronDown className="h-4 w-4" />
-                        </button>
-                        {isCustomOpen && selectedSubject === "custom" && (
+                        {isAdditionalOpen && formData.subjectType === "additional" && (
                           <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg">
-                            {["Custom Subject 1", "Custom Subject 2"].map(
+                            {["Art", "Music", "Physical Education"].map(
                               (subject) => (
                                 <button
                                   key={subject}
                                   className="w-full px-3 py-1.5 text-sm text-left hover:bg-gray-50"
-                                  onClick={() => setIsCustomOpen(false)}
+                                  onClick={() => {
+                                    setFormData(prev => ({ ...prev, selectedSubject: subject }));
+                                    setIsAdditionalOpen(false);
+                                  }}
                                 >
                                   {subject}
                                 </button>
@@ -218,6 +211,37 @@ export default function TeachingSetupForm() {
                           </div>
                         )}
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Custom Subject - Changed to text input */}
+                  <div className="flex items-start space-x-2">
+                    <div
+                      className="relative flex items-center"
+                      onClick={() => setFormData(prev => ({ ...prev, subjectType: "custom", selectedSubject: "" }))}
+                    >
+                      <input
+                        type="radio"
+                        name="subject"
+                        checked={formData.subjectType === "custom"}
+                        onChange={() => setFormData(prev => ({ ...prev, subjectType: "custom", selectedSubject: "" }))}
+                        className="w-3 h-3 text-green-500 border-gray-300 focus:ring-green-500"
+                      />
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <label className="block text-sm text-gray-500">
+                        Custom Subject
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter the Subject"
+                        disabled={formData.subjectType !== "custom"}
+                        value={formData.customSubject}
+                        onChange={(e) => setFormData(prev => ({ ...prev, customSubject: e.target.value }))}
+                        className={`w-full px-3 py-1.5 text-sm border rounded-md ${
+                          formData.subjectType === "custom" ? "bg-white" : "bg-gray-50"
+                        }`}
+                      />
                     </div>
                   </div>
                 </div>
@@ -233,23 +257,25 @@ export default function TeachingSetupForm() {
                     onClick={() => setIsCurriculumOpen(!isCurriculumOpen)}
                     className="w-full px-3 py-1.5 text-sm text-left border rounded-md flex items-center justify-between"
                   >
-                    <span>Toronto District School Board</span>
+                    <span>{formData.curriculum}</span>
                     <ChevronDown className="h-4 w-4" />
                   </button>
                   {isCurriculumOpen && (
                     <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg">
-                      {[
-                        "Toronto District School Board",
-                        "Other School Board",
-                      ].map((board) => (
-                        <button
-                          key={board}
-                          className="w-full px-3 py-1.5 text-sm text-left hover:bg-gray-50"
-                          onClick={() => setIsCurriculumOpen(false)}
-                        >
-                          {board}
-                        </button>
-                      ))}
+                      {["Toronto District School Board", "Other School Board"].map(
+                        (board) => (
+                          <button
+                            key={board}
+                            className="w-full px-3 py-1.5 text-sm text-left hover:bg-gray-50"
+                            onClick={() => {
+                              setFormData(prev => ({ ...prev, curriculum: board }));
+                              setIsCurriculumOpen(false);
+                            }}
+                          >
+                            {board}
+                          </button>
+                        )
+                      )}
                     </div>
                   )}
                 </div>
@@ -257,7 +283,10 @@ export default function TeachingSetupForm() {
             </div>
 
             {/* Save Button */}
-            <button className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md transition-colors text-sm">
+            <button 
+              className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md transition-colors text-sm"
+              onClick={handleSave}
+            >
               Save & Continue
             </button>
           </div>
@@ -265,12 +294,6 @@ export default function TeachingSetupForm() {
         <div className="hidden md:block w-1/2 p-12">
           <div className="h-full flex items-center justify-center">
             <div className="text-white space-y-4">
-              {/* <h2 className="text-3xl font-bold">Ready to start teaching?</h2>
-              <p className="text-green-100">
-                Set up your teaching profile to begin tracking student progress
-                and managing your classes effectively.
-              </p> */}
-              {/* Add your illustration/image here */}
               <div className="w-full max-w-md mx-auto">
                 <img
                   src={teachingSetup}
