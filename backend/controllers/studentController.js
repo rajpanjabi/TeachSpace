@@ -114,10 +114,5 @@ export const getObservationsByStudent = async (req, res) => {
 };
 
 
-// lets create a student profile page which will show image of student profile in circle in centre top.
-// below student name
-// below this there should be a div containing observation made on students and soem grpahiscs
-// below this there should be some plotes/visual graph with some metrics
-// option to generate report on student performance and option to send email to parent
 
 

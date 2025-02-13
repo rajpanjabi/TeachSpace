@@ -5,11 +5,7 @@ export const googleAuth = passport.authenticate('google', {
   scope: ['profile', 'email'],
 });
 
-// Google callback route
-// export const googleCallback = passport.authenticate('google', {
-//   failureRedirect: '/login',
-//   successRedirect: 'http://localhost:5173/dashboard',
-// });
+
 export const googleCallback = (req, res, next) => {
   passport.authenticate('google', { failureRedirect: '/login' }, (err, user) => {
     if (err || !user) {

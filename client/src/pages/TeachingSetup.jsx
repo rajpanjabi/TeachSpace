@@ -53,7 +53,7 @@ export default function TeachingSetupForm() {
     }
 
     // Redirect to the next page if response is successful and pass the teacherName and subjectName
-  //  navigate()
+   navigate("/addstudents", { state: { teacherName, subjectName: finalData.name } });
    
     };
 
