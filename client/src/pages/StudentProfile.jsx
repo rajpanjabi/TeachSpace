@@ -244,12 +244,11 @@ const StudentProfile = () => {
     setIsGeneratingReport(true);
     try {
       const prompt = observations
-        .map(obs => `Metric: ${metrics}\nObservation: ${obs.observationText}\n`)
-        .join("\n");
-      console.log(prompt);
-
-      console.log(observations)
-      console.log(metrics)
+        .map(obs => `Metric: ${obs.metric}\nObservation: ${obs.observationText}`)
+        .join("\n\n");
+  
+      console.log("Formatted Prompt:", prompt);
+  
       const response = await fetch("https://api.cohere.ai/v1/generate", {
         method: "POST",
         headers: {
@@ -257,15 +256,16 @@ const StudentProfile = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "xlarge",
-          prompt: `Generate a comprehensive student report summarizing the following observations and highlighting key metrics:\n\n${prompt}\n\nPlease provide specific insights and recommendations based on these observations.`,
+          model: "command-r-plus",
+          prompt: `Generate a comprehensive student report summarizing the following observations and highlighting key metrics:\n\n${prompt}\n\nProvide specific insights and recommendations.`,
           max_tokens: 500,
           temperature: 0.7,
         }),
       });
   
       const data = await response.json();
-      console.log("Cohere Api rsponse", data);
+      console.log("Cohere API Response:", data);
+  
       if (data?.generations?.[0]?.text) {
         setReport(data.generations[0].text);
         alert("Report generated successfully!");
